@@ -1,1 +1,4 @@
 make sure you have "convolved_grid_with_vsini.pkl" in the same directory.
+
+
+Also need to be in isochrones environment: https://isochrones.readthedocs.io/en/latest/index.html
