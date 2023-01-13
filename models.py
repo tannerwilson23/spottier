@@ -15,9 +15,10 @@ from tqdm import tqdm
 import scipy.optimize as op
 np.random.seed(80085)
 
-
+#the number of spectra you create will be smaller than this number. fails for some, just make sure you make enough to run the number you want
 size =100
 wl = 10**(6e-6*np.arange(8575)+4.179)
+
 def sampleFromSalpeter(N, alpha, M_min, M_max):
     # Convert limits from M to logM.
     log_M_Min = math.log(M_min)
@@ -79,7 +80,7 @@ def sampleFromModels(models,plot=False):
         plt.ylabel('Log L')
     return chosen
 
-
+#import rossby data and create interpolator
 ros = fits.open('rosby_data.fits')
 ros_ros = ros[1].data
 ros_ros_trans = np.zeros([149,3])
@@ -130,7 +131,7 @@ def approximate_log10_microturbulence(log_g):
     DM = np.array([1, log_g, log_g**2, log_g**3, 0])
     return DM @ coeffs
 
-
+#this will either check whether the interpolator grid is in your current directory or will create the interpolator and pickle it. saves ~20mins
 interp_pkl = "interp_grid.pkl"
 if os.path.isfile(interp_pkl):
     with open("interp_grid.pkl" ,'rb') as f:
@@ -184,14 +185,6 @@ def fspot_from_ross(rossby):
     else:
         fspot = 6.34e-2 * rossby**(-0.881)
     return fspot
-
-
-# plt.figure()
-# plt.scatter(np.array(params_injected).T[2],np.array(params_injected).T[3],c = np.array(params_injected).T[4])
-# plt.xlabel('Teff (K)')
-# plt.ylabel(r'logg (cm/s$^2$)')
-# plt.xlim(8000,3800)
-# plt.title('HR of chosen stars logg vs Teff.')
 
 def create_synth_spec():
     raw_data_true =[]
@@ -250,7 +243,7 @@ def create_synth_spec():
             normalised_data_e.append(e)
             normalised_data.append(norm_data_true+ e*np.random.randn(P))
 
-
+    #dump the spectra if you don't want to make them all the time.
     with open('norm_spectra.pkl' ,'wb') as f:
         pkl.dump(normalised_data,f)
 
@@ -260,6 +253,7 @@ def create_synth_spec():
     with open('injected_params.pkl.pkl' ,'wb') as f:
         pkl.dump(params_injected,f)
 
+    print("Generated " + str(len(normalised_data)[0]) + ' spectra')
     return normalised_data,normalised_data_e ,params_injected
 
 
