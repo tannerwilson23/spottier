@@ -1,4 +1,25 @@
-make sure you have "convolved_grid_with_vsini.pkl" in the same directory.
-
-
+make sure you have "convolved_grid_with_vsini.pkl" in the same directory. After the first run ~20mins will save interpolator as a pkl saving time when running again.
 Also need to be in isochrones environment: https://isochrones.readthedocs.io/en/latest/index.html
+
+Running models.py will create some spotted spectra (size changes the number that it attempts to make but will fail 3/4 of the time so will display how many it actually created)
+This will create 3 pkls of arrays "norm_spectra, norm_spectra_e and injected_params". Spectra arrays will have shape (number of spectra created x 8575). injected params will have shape (number of spectra x 11) 
+
+injected params has order: [x_spot_draws,fspot,teff,logg,meh,prot,i_deg,log10_vsini,age,tau_conv,mass,logl]
+
+Following this it will attempt to fit a set amount of the spectra with the spotted and non spotted models.
+Varying starts and E will change the number of times you fit the spectra from different inits and the number of spectra you try to fit respectively.
+
+This will then create 6 arrays that are dumped as pkls:
+
+res_spotted
+res_non_spotted
+opt_spotted
+opt_non_spotted
+inits_spotted
+inits_non_spotted
+
+res* should have shape (starts x E x 2)  have the full_output = True dictionary of fitting information + the inits
+opt* and inits* should have shape (stars x E x number of parameters fitting) - 4 for nonspotted and 6 for spotted
+
+If you want to fit a single spectra it's probably best to use "fit_speccy(i,normalised_data,normalised_data_e ,params_injected)" where normalised data etc. are the full arrays of all the spectra and i is the index of the star you want to fit - the results arrays aren't currently set up to take a single star.
+
