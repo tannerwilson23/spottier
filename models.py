@@ -253,7 +253,7 @@ def create_synth_spec():
     with open('injected_params.pkl.pkl' ,'wb') as f:
         pkl.dump(params_injected,f)
 
-    print("Generated " + str(len(normalised_data)[0]) + ' spectra')
+    print("Generated " + str(len(normalised_data)) + ' spectra')
     return normalised_data,normalised_data_e ,params_injected
 
 
